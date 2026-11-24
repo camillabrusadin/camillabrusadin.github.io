@@ -47,7 +47,7 @@ if(project.number==='012.'){
     ['3.png','image',2008/2835],
     ['4.png','image',470/2835],
     ['5.png','image',2008/2835],
-    ['6.mp4','video',16/9],
+    ['6.mov','video',16/9],
     ['7.png','image',4173/2873],
     ['Frame 24.png','image',4173/2873],
     ['Frame 25.png','image',4173/2873],
