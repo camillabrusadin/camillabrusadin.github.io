@@ -108,10 +108,10 @@ if(project.number==='010.'){
   document.querySelector('.detail-gallery').innerHTML=[
     ['images/010/gallery/1.mp4','video'],
     ['images/010/gallery/2.mp4','video'],
-    ['images/010/gallery/3.mp4','video'],
+    ['images/010/gallery/3.mov','video'],
     ['images/010/gallery/39.png','image'],
     ['images/010/gallery/6.mp4','video'],
-    ['images/010/gallery/6_Sentiero-parte2.mp4','video']
+    ['images/010/gallery/6_Sentiero.mov','video']
   ].map(([src,kind],index)=>kind==='video'
     ? `<video class="detail-image project-photo" src="${src}" aria-label="Impasse, video ${index+1}" data-reveal autoplay muted loop playsinline preload="metadata"></video>`
     : `<img class="detail-image project-photo" src="${src}" alt="Impasse, immagine ${index+1}" data-reveal loading="lazy">`
@@ -142,14 +142,14 @@ if(project.number==='008.'){
   document.querySelector('.detail-gallery').innerHTML=[
     ['images/008/gallery/01.jpg','image'],
     ['images/008/gallery/02.jpg','image'],
-    ['images/008/gallery/03.mp4','video'],
+    ['images/008/gallery/03.mov','video'],
     ['images/008/gallery/04.png','image'],
     ['images/008/gallery/05.png','image'],
     ['images/008/gallery/06.png','image'],
     ['images/008/gallery/07.png','image'],
     ['images/008/gallery/08.png','image'],
     ['images/008/gallery/09.png','image'],
-    ['images/008/gallery/10.mp4','video'],
+    ['images/008/gallery/10.mov','video'],
     ['images/008/gallery/11.jpg','image'],
     ['images/008/gallery/12.jpg','image']
   ].map(([src,kind],index)=>kind==='video'
@@ -200,17 +200,17 @@ if(project.number==='003.'){
   document.querySelector('.detail-gallery').innerHTML=[
     ['images/003/gallery/01.jpg','image'],
     ['images/003/gallery/02.jpg','image'],
-    ['images/003/gallery/03.mp4','video'],
+    ['images/003/gallery/03.mov','video'],
     ['images/003/gallery/05.png','image'],
     ['images/003/gallery/06.jpg','image'],
-    ['images/003/gallery/08.png',,'image'],
-    ['images/003/gallery/09.mp4','video'],
-    ['images/003/gallery/176.png',,'image'],
-    ['images/003/gallery/177.png','image'],
-    ['images/003/gallery/178.png','image'],
-    ['images/003/gallery/179.png','image'],
-    ['images/003/gallery/180.png','image'],
-    ['images/003/gallery/181.png','image'],
+    ['images/003/gallery/08.jpeg',,'image'],
+    ['images/003/gallery/09.mov','video'],
+    ['images/003/gallery/176.jpg',,'image'],
+    ['images/003/gallery/177.jpg','image'],
+    ['images/003/gallery/178.jpg','image'],
+    ['images/003/gallery/179.jpg','image'],
+    ['images/003/gallery/180.jpg','image'],
+    ['images/003/gallery/181.jpg','image'],
     ['images/003/gallery/07.jpg','image'],
   ].map(([src,kind],index)=>kind==='video'
     ? `<video class="detail-image project-photo" src="${src}" aria-label="Illumia, video ${index+1}" data-reveal autoplay muted loop playsinline preload="metadata"></video>`
@@ -222,8 +222,8 @@ if(project.number==='004.'){
   const images=[
     ['images/004/gallery/01.mp4','video'],
     ['images/004/gallery/02.jpg','image'],
-    ['images/004/gallery/03.png','image'],
-    ['images/004/gallery/04.png','image'],
+    ['images/004/gallery/03.jpg','image'],
+    ['images/004/gallery/04.jpg','image'],
     ['images/004/gallery/05.jpg','image'],
     ['images/004/gallery/06.jpg','image'],
     ['images/004/gallery/07.jpg','image'],
@@ -246,7 +246,7 @@ if(project.number==='005.'){
     ['images/005/gallery/05.mov','video'],
     ['images/005/gallery/06.jpg','image'],
     ['images/005/gallery/07.png','image'],
-    ['images/005/gallery/08.mp4','video'],
+    ['images/005/gallery/08.mov','video'],
     ['images/005/gallery/09.mov','video'],
   ];
   const renderImage=([src,kind],index)=>kind==='video'
