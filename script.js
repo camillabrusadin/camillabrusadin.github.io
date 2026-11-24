@@ -122,8 +122,9 @@ const progress=document.querySelector('.progress span');
 const gallery=document.querySelector('.gallery');
 const gridList=document.querySelector('.grid-list');
 const gridPreview=document.querySelector('.grid-preview');
+const isMobileViewport=window.matchMedia('(max-width: 640px)').matches;
 let current=0;
-const requestedView=new URLSearchParams(location.search).get('view');
+const requestedView=isMobileViewport?'full':new URLSearchParams(location.search).get('view');
 const cloneSlide=source=>{
   const clone=source.cloneNode(true);
   clone.classList.add('project-clone');
@@ -181,8 +182,15 @@ function setView(view){
 }
 document.querySelectorAll('.view-button').forEach(button=>button.addEventListener('click',()=>setView(button.dataset.viewTarget)));
 if(requestedView==='grid'||requestedView==='full')setView(requestedView);
-document.querySelector('.hit-left').addEventListener('click',()=>showProject(current-1,-1));
-document.querySelector('.hit-right').addEventListener('click',()=>showProject(current+1,1));
+let suppressGalleryClickUntil=0;
+document.querySelector('.hit-left').addEventListener('click',event=>{
+  if(Date.now()<suppressGalleryClickUntil){event.preventDefault();return}
+  showProject(current-1,-1);
+});
+document.querySelector('.hit-right').addEventListener('click',event=>{
+  if(Date.now()<suppressGalleryClickUntil){event.preventDefault();return}
+  showProject(current+1,1);
+});
 gallery.addEventListener('mousemove',event=>{
   cue.style.left=`${event.clientX}px`;cue.style.top=`${event.clientY}px`;
   cue.textContent=event.clientX<window.innerWidth/2?'PREVIOUS':'NEXT';
@@ -197,11 +205,17 @@ let touchStart=0;
 gallery.addEventListener('touchstart',event=>touchStart=event.changedTouches[0].clientX,{passive:true});
 gallery.addEventListener('touchend',event=>{
   const distance=event.changedTouches[0].clientX-touchStart;
-  if(Math.abs(distance)>40)showProject(current+(distance<0?1:-1),distance<0?1:-1);
+  if(Math.abs(distance)>40){
+    showProject(current+(distance<0?1:-1),distance<0?1:-1);
+    suppressGalleryClickUntil=Date.now()+700;
+  }
 },{passive:true});
 
 projects.forEach((project,index)=>{
-  const openProject=()=>{location.href=`project.html?item=${index}&from=${document.body.dataset.view||'full'}`};
+  const openProject=()=>{
+    if(window.matchMedia('(max-width: 640px)').matches)return;
+    location.href=`project.html?item=${index}&from=${document.body.dataset.view||'full'}`;
+  };
   project.addEventListener('click',openProject);
   project.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openProject()}});
   const row=document.createElement('a');

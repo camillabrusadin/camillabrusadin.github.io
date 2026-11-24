@@ -1,3 +1,6 @@
+if(window.matchMedia('(max-width: 640px)').matches){
+  window.location.replace('index.html#home');
+}else{
 const projectData=[
   {number:'001.',title:'Palomar guarda il mondo — Un atlante fotografico dello sguardo di Italo Calvino',type:'Editorial design',client:'Progetto personale',year:'2025',artwork:'artwork-alter',description:`Palomar guarda il mondo is an editorial project that reinterprets Italo Calvino’s 1983 work, Palomar, through a transmedia lens. The result is a photographic book structured in nine chapters, each divided into three sections, for a total of 27 photo series. The photographs do not aim to portray the world, but to investigate the details of the phenomena around us. Palomar represents an alert, curious eye, an attitude often overlooked. Adopting his gaze becomes a meaningful way to reclaim a quality that has defined humanity for centuries: critical inquiry that persists even in the awareness of its own limits. The project invites us to explore life’s complexities with fresh eyes, enriching our perceptions and our understanding of reality.`},
   {number:'002.',title:'Arte Rupestre Valcamonica — Identità visiva per il patrimonio rupestre della Valle Camonica',type:'Visual identity',client:'Progetto personale',year:'2024',artwork:'artwork-forma',description:`Arte Rupestre Valcamonica is a branding project created to promote the UNESCO rock art site in Valcamonica. Bringing together physical and digital artefacts, the project draws on an in-depth study of local culture and history. Its aim is to fit harmoniously into the natural landscape and bring greater visibility to the rich system of symbols and images that make up the valley’s heritage. The visual concept distils the distinctive, material quality of the rock engravings scattered throughout the area. The resulting ecosystem includes institutional materials such as brochures, catalogues, merchandise and signage, alongside an app that makes visits to the parks interactive and an Instagram profile designed to reach a wider audience of visitors and enthusiasts.`},
@@ -37,11 +40,50 @@ const from=params.get('from')==='grid'?'grid':'full';
 const project=projectData[index];
 if(['001.','002.','003.','004.','005.','006.','007.','009.','011.'].includes(project.number)) project.title=project.title.split(' — ')[0];
 if(project.number==='012.'){
-  document.querySelector('.detail-gallery').innerHTML=[
-    ['images/012/GALLERY/2.png','Border Memory, indice e capitolo sulla spazializzazione della memoria'],
-    ['images/012/GALLERY/3.png','Border Memory, tavola sulla tipologia interpretativa dei luoghi della migrazione'],
-    ['images/012/GALLERY/4.png','Border Memory, tavola sulla tipologia interpretativa dei luoghi della migrazione']
-  ].map(([src,alt])=>`<img class="detail-image project-photo" src="${src}" alt="${alt}" data-reveal loading="lazy">`).join('');
+  const gallery=document.querySelector('.detail-gallery');
+  gallery.classList.add('detail-gallery--border-memory');
+  const media=[
+    ['1.png','image',2008/2835],
+    ['3.png','image',2008/2835],
+    ['4.png','image',470/2835],
+    ['5.png','image',2008/2835],
+    ['6.mp4','video',16/9],
+    ['7.png','image',4173/2873],
+    ['Frame 24.png','image',4173/2873],
+    ['Frame 25.png','image',4173/2873],
+    ['Frame 28.png','image',4173/2873],
+    ['Frame 48.png','image',4173/2873],
+    ['Frame 49.png','image',4173/2873],
+    ['Frame 50.png','image',4173/2873],
+    ['Frame 51.png','image',4173/2873],
+    ['Frame 57.png','image',4173/2873],
+    ['Frame 64.png','image',4173/2873],
+    ['Frame 65.png','image',4173/2873],
+    ['Frame 67.png','image',4173/2873],
+    ['frame 100.png','image',1596/1080]
+  ];
+  const renderMedia=([file,kind,aspect],index)=>{
+    const src=`images/012/GALLERY/${encodeURIComponent(file)}`;
+    return kind==='video'
+      ? `<video class="detail-image project-photo" src="${src}" aria-label="Border Memory, video ${index+1}" data-gallery-index="${index+1}" data-aspect="${aspect}" data-reveal autoplay muted loop playsinline preload="metadata"></video>`
+      : `<img class="detail-image project-photo" src="${src}" alt="Border Memory, image ${index+1}" data-gallery-index="${index+1}" data-aspect="${aspect}" data-reveal loading="lazy">`;
+  };
+  gallery.innerHTML=`<div class="detail-image-row detail-image-row--triple">${media.slice(0,4).map((item,index)=>renderMedia(item,index===0?0:index+1)).join('')}</div>`
+    + media.slice(4).map((item,index)=>`<div class="detail-image-row detail-image-row--single">${renderMedia(item,index+5)}</div>`).join('');
+  const referenceImage=gallery.querySelector('[data-gallery-index="7"]');
+  const matchRowHeights=()=>{
+    const height=referenceImage.getBoundingClientRect().height;
+    if(height>0){
+      gallery.style.setProperty('--border-memory-media-height',`${height}px`);
+      gallery.querySelectorAll('.detail-image-row--triple .project-photo').forEach(item=>{
+        item.style.width=`${Number(item.dataset.aspect)*height}px`;
+      });
+    }
+  };
+  if('ResizeObserver' in window) new ResizeObserver(matchRowHeights).observe(referenceImage);
+  referenceImage.addEventListener('load',matchRowHeights,{once:true});
+  window.addEventListener('resize',matchRowHeights,{passive:true});
+  requestAnimationFrame(matchRowHeights);
 }
 if(project.number==='011.'){
   document.querySelector('.detail-gallery').innerHTML=[
@@ -341,3 +383,4 @@ close.addEventListener('click',event=>{
     history.back();
   }
 });
+}

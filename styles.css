@@ -367,6 +367,14 @@ body.project-detail-page{overflow:auto;background:#000;color:#fff}
 .detail-image-row--anthropogenic .detail-image.project-photo{grid-column:span 3}
 .detail-image-row--same-height{display:flex;align-items:flex-start;gap:var(--gutter)}
 .detail-image-row--same-height .detail-image.project-photo{flex:0 0 auto;width:auto;height:min(46svh,620px);object-fit:contain}
+.detail-gallery--border-memory{display:flex;width:100%;gap:var(--gutter)}
+.detail-gallery--border-memory .detail-image-row{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gutter);width:100%}
+.detail-gallery--border-memory .detail-image-row--pair .detail-image.project-photo{grid-column:span 6}
+.detail-gallery--border-memory .detail-image-row--triple .detail-image.project-photo{grid-column:span 4}
+.detail-gallery--border-memory .detail-image-row--single .detail-image.project-photo{grid-column:1/span 6;width:calc(5 * var(--list-column) + 4 * var(--gutter));height:auto;min-height:0;aspect-ratio:auto;object-fit:contain}
+.detail-gallery--border-memory .detail-image-row .detail-image.project-photo{height:auto;min-height:0;max-width:100%;object-fit:contain}
+.detail-gallery--border-memory .detail-image-row--triple{display:flex;align-items:flex-start;gap:var(--gutter)}
+.detail-gallery--border-memory .detail-image-row--triple .detail-image.project-photo{flex:0 0 auto;height:var(--border-memory-media-height,auto);min-height:0;max-width:none;object-fit:contain}
 .artwork.project-cover:before,.artwork.project-cover:after{display:none}
 body[data-view="grid"] .grid-preview .artwork.project-cover{background-size:cover!important;background-repeat:no-repeat!important}
 .placeholder-one{background:#a54e35}
@@ -398,6 +406,10 @@ body[data-view="grid"] .grid-preview .artwork.project-cover{background-size:cove
   .detail-image-row--triple .detail-image.project-photo{grid-column:span 1}
   .detail-image-row--pair .detail-image.project-photo{grid-column:span 2}
   .detail-image-row--same-height .detail-image.project-photo{height:min(40vw,220px);width:auto;max-width:100%}
+  .detail-gallery--border-memory .detail-image-row{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .detail-gallery--border-memory .detail-image-row--pair .detail-image.project-photo{grid-column:span 2}
+  .detail-gallery--border-memory .detail-image-row--triple .detail-image.project-photo{grid-column:span 1}
+  .detail-gallery--border-memory .detail-image-row--single .detail-image.project-photo{grid-column:1/span 3;width:100%}
 }
 
 /* Tutte le voci condividono la stessa riga e lo stesso padding dell’header */
@@ -551,4 +563,43 @@ body[data-view="grid"] .grid-preview .artwork.project-cover-005{background-size:
 .topbar{color:#fff!important;mix-blend-mode:difference}
 .topbar .blend{color:inherit;mix-blend-mode:normal}
 /* Hover uniforme per tutti i controlli testuali cliccabili */
-:is(a,button):not(.project):not(.grid-card):hover{color:#858585;mix-blend-mode:normal}
+:is(a,button):not(.project):not(.grid-card):not(.project-row):hover{color:#858585;mix-blend-mode:normal}
+
+.mobile-contact,.mobile-close{display:none}
+@media(max-width:640px){
+  .topbar{position:fixed!important;inset:0 0 auto!important;height:auto!important;min-height:0!important;padding:14px!important;display:flex!important;justify-content:space-between!important;align-items:flex-start!important;gap:0!important;z-index:30}
+  .topbar>.wordmark{position:static!important;display:block!important;grid-column:auto!important;grid-row:auto!important;inset:auto!important;margin:0!important;padding:0!important;line-height:1!important}
+  .topbar>.section-nav,.topbar>.about-link,.topbar>.project-count,.topbar>.view-switch{display:none!important}
+  .mobile-contact{position:fixed;z-index:30;left:14px;bottom:16px;display:flex;flex-direction:column;align-items:flex-start;gap:0;color:#fff;mix-blend-mode:difference;font-size:12px;line-height:normal;font-weight:700}
+  .mobile-contact a:not(.mobile-about-link){text-decoration:underline!important;text-underline-offset:2px}
+  .mobile-contact .mobile-about-link{margin-top:9px}
+  .cursor-cue,.progress{display:none!important}
+  body[data-view="grid"] .grid-view,.grid-view{display:none!important}
+  body[data-view="grid"] .gallery{display:block!important}
+  .gallery-hit{top:48px!important;bottom:105px!important;z-index:5}
+  .full-view .project{padding:0!important}
+  .project{cursor:pointer}
+  body.info-page{overflow:hidden!important}
+  body.info-page .mobile-close{position:static!important;display:block!important;grid-column:auto!important;grid-row:auto!important;inset:auto!important;margin:0!important;padding:0!important;line-height:1!important;color:#fff;mix-blend-mode:difference}
+  body.info-page .info-view{position:fixed!important;inset:0!important;display:block!important;overflow-x:hidden!important;overflow-y:auto!important;padding:64px 14px 24px!important;background:var(--paper)!important}
+  body.info-page .info-copy{width:100%;margin:0 0 24px!important;font-size:13px!important;line-height:1.4!important}
+  body.info-page .info-section-row{display:block!important;margin:18px 0 0!important;font-size:13px!important;line-height:1.4!important}
+  body.info-page .info-copy+.info-section-row{margin-top:24px!important}
+  body.info-page .info-section-row h2{display:block!important;margin:0 0 4px!important;font:inherit!important}
+  body.info-page .info-section-content{display:block!important;margin:0!important}
+  body.info-page .info-section-content p{margin:0!important}
+  body.info-page .info-section-content p+p{margin-top:5px!important}
+  body,body *{font-size:13px!important}
+}
+@media(max-width:640px){
+  .full-view .project[data-number="003."],
+  .full-view .project[data-number="004."],
+  .full-view .project[data-number="005."],
+  .full-view .project[data-number="008."],
+  .full-view .project[data-number="012."]{width:100vw!important;flex-basis:100vw!important}
+  .full-view .project[data-number="003."] .artwork.project-cover,
+  .full-view .project[data-number="004."] .artwork.project-cover,
+  .full-view .project[data-number="005."] .artwork.project-cover,
+  .full-view .project[data-number="008."] .artwork.project-cover,
+  .full-view .project[data-number="012."] .artwork.project-cover{background-size:cover!important;background-position:center!important}
+}
