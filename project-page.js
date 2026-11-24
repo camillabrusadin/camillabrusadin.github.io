@@ -168,9 +168,19 @@ if(project.number==='009.'){
     'images/009/gallery/gallery02/06.png',
     'images/009/gallery/gallery02/07.gif'
   ];
-  const renderImage=(src,index)=>`<img class="detail-image project-photo" src="${src}" alt="No! The sound of dissens ${index+1}" data-reveal loading="lazy">`;
+  const renderImage=(src,index)=>`<img class="detail-image project-photo" src="${src}" alt="No! The sound of dissens ${index+1}" data-gallery-index="${index}" data-reveal loading="lazy">`;
   gallery.innerHTML=`<div class="detail-image-row detail-image-row--first detail-image-row--same-height">${images.slice(0,2).map((src,index)=>renderImage(src,index+1)).join('')}</div>`
     + images.slice(2).map((src,index)=>renderImage(src,index+3)).join('');
+  const referenceImage=gallery.querySelector('[data-gallery-index="4"]');
+  const rowImages=gallery.querySelectorAll('.detail-image-row--same-height .project-photo');
+  const matchRowHeight=()=>{
+    const height=referenceImage.getBoundingClientRect().height;
+    if(height>0) rowImages.forEach(image=>image.style.height=`${height}px`);
+  };
+  if('ResizeObserver' in window) new ResizeObserver(matchRowHeight).observe(referenceImage);
+  referenceImage.addEventListener('load',matchRowHeight,{once:true});
+  window.addEventListener('resize',matchRowHeight,{passive:true});
+  requestAnimationFrame(matchRowHeight);
 }
 if(project.number==='001.'){
   document.querySelector('.detail-gallery').innerHTML=[
@@ -313,6 +323,11 @@ const projectMetadata={
     authors:'Camilla Brusadin, Daniele Galbusera, Marco Taino, Costanza Turi, Ilaria Urgesi',
     specifications:'191 pages, softcover, 165 × 240 mm, offset printing, sewn binding, Fedrigoni Arena Ultrawhite 120 g/m², Burgo Matt 150 g/m², Pur Cotton Smoke 120 g/m², Reflex Zeta Linen 350 g/m²'
   },
+   '009.':{
+    context:'Workshop, Master’s Degree in Communication Design, Politecnico di Milano',
+    authors:'Camilla Brusadin',
+    specifications:'187 pages, softcover, 210x270 mm, offset printing, fastener binding, Tintoretto Neve 95 g/m², tracing paper 100 g/m²'
+  },
   '010.':{
     context:'Final Project course, Master’s Degree in Communication Design, Politecnico di Milano',
     authors:'Camilla Brusadin, Daniele Galbusera, Luca Gottifredi, Arianna Marenghi, Beatrice Serra',
@@ -344,25 +359,36 @@ projectCategories.className='detail-project-categories';
 document.querySelector('.detail-description').append(projectCategories);
 
 let revealObserver;
-const revealWhenReady=element=>{
-  if(element.dataset.revealInView!=="true"||element.classList.contains("is-visible")) return;
-  const ready=element.dataset.revealFailed==="true"||(element instanceof HTMLImageElement
-    ? element.complete&&element.naturalWidth>0
-    : element instanceof HTMLVideoElement
-      ? element.readyState>=HTMLMediaElement.HAVE_CURRENT_DATA
-      : true);
-  if(!ready) return;
-  element.classList.add("is-visible");
-  revealObserver.unobserve(element);
+const revealGroups=new Map();
+const mediaIsReady=element=>element.dataset.revealFailed==="true"||(element instanceof HTMLImageElement
+  ? element.complete&&element.naturalWidth>0
+  : element instanceof HTMLVideoElement
+    ? element.readyState>=HTMLMediaElement.HAVE_CURRENT_DATA
+    : true);
+const revealWhenReady=target=>{
+  if(target.dataset.revealInView!=="true") return;
+  const group=revealGroups.get(target)||[target];
+  if(!group.every(mediaIsReady)) return;
+  group.forEach(element=>element.classList.add("is-visible"));
+  revealObserver.unobserve(target);
 };
 revealObserver=new IntersectionObserver(entries=>{
   entries.forEach(entry=>{
     entry.target.dataset.revealInView=entry.isIntersecting?"true":"false";
+    const group=revealGroups.get(entry.target)||[entry.target];
+    group.forEach(element=>element.dataset.revealInView=entry.isIntersecting?"true":"false");
     revealWhenReady(entry.target);
   });
 },{threshold:0,rootMargin:"0px"});
 document.querySelectorAll("[data-reveal]").forEach(element=>{
-  const onReady=()=>revealWhenReady(element);
+  const row=element.closest(".detail-image-row");
+  const rowItems=row?[...row.querySelectorAll("[data-reveal]")]:[];
+  const target=rowItems.length>1?row:element;
+  if(!revealGroups.has(target)){
+    revealGroups.set(target,rowItems.length>1?rowItems:[element]);
+    revealObserver.observe(target);
+  }
+  const onReady=()=>revealWhenReady(target);
   element.addEventListener("load",onReady);
   element.addEventListener("loadeddata",onReady);
   element.addEventListener("canplay",onReady);
@@ -370,7 +396,6 @@ document.querySelectorAll("[data-reveal]").forEach(element=>{
     element.dataset.revealFailed="true";
     onReady();
   },{once:true});
-  revealObserver.observe(element);
 });
 
 const homeUrl=`index.html?view=${from}#home`;
